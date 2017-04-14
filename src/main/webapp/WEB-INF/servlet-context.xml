@@ -5,6 +5,7 @@
     xmlns:context="http://www.springframework.org/schema/context"   
     xmlns:mvc="http://www.springframework.org/schema/mvc"   
     xmlns:task="http://www.springframework.org/schema/task"  
+    xmlns:aop="http://www.springframework.org/schema/aop" 
     xsi:schemaLocation="  
         http://www.springframework.org/schema/beans   
         http://www.springframework.org/schema/beans/spring-beans-4.2.xsd   
@@ -13,7 +14,9 @@
         http://www.springframework.org/schema/mvc   
         http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd   
         http://www.springframework.org/schema/task   
-        http://www.springframework.org/schema/task/spring-task-4.2.xsd">  
+        http://www.springframework.org/schema/task/spring-task-4.2.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd">  
   
     <!-- 扫描路径 -->  
     <context:component-scan base-package="com.springmvc" >  
@@ -26,7 +29,15 @@
     <!-- 激活基于注解的配置 @RequestMapping, @ExceptionHandler,数据绑定 ,@NumberFormat ,  
     @DateTimeFormat ,@Controller ,@Valid ,@RequestBody ,@ResponseBody等  -->  
     <mvc:annotation-driven />  
-  
+    <mvc:interceptors>
+    	<mvc:interceptor>
+    		<mvc:mapping path="/**"/>
+    		<bean class="com.springmvc.interceptor.ContentRequestInterceptor"></bean>
+    	</mvc:interceptor>
+    </mvc:interceptors>
+  <!--  启用aop  -->
+	<aop:aspectj-autoproxy proxy-target-class="true"/>
+	<bean id="aspectInterceptor" class="com.springmvc.interceptor.RequestAspect"/>
     <!-- 静态资源配置 -->  
     <mvc:resources location="/assets/" mapping="/assets/**"></mvc:resources>  
   
@@ -61,12 +72,12 @@
 		<property name="contentNegotiationManager" ref="contentNegotiationManager" />
 		<property name="viewResolvers">
 			<list>
-				<bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+				<!-- <bean class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
 					<property name="cache" value="true"/>
 					<property name="prefix" value=""/>
 					<property name="suffix" value=".html"/>
 					<property name="contentType"><value>text/html; charset=utf-8</value></property>
-				</bean>
+				</bean> -->
 			</list>
 		</property>
 		<!-- 默认视图 放在解析链最后 -->
