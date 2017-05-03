@@ -1,7 +1,14 @@
 package com.springmvc.model;
 
-public class Student {
+import java.io.Serializable;
+
+public class Student implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -6292179713121923335L;
+
 	private int id;
 	
 	private String name;

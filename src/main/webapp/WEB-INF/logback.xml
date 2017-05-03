@@ -32,10 +32,10 @@
         </encoder>
     </appender>
 
-    <root level="info">
+    <root level="debug">
     	<appender-ref ref="STDOUT"/>
     </root>
-	<logger name="com.springmvc.log.ErrorLog"  level="info">
+	<logger name="com.springmvc.log.ErrorLog"  level="debug">
         <appender-ref ref="STDOUT"/>
     </logger>
     

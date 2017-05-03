@@ -31,8 +31,44 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	<!-- 启用注解 -->
-	<context:annotation-config></context:annotation-config>
+	<context:annotation-config/>
 	
+		<!-- Memcached配置 -->  
+    <bean id="memcachedPool" class="com.whalin.MemCached.SockIOPool"  
+        factory-method="getInstance" init-method="initialize"  destroy-method="shutDown">  
+        <constructor-arg>  
+            <value>whalinMemcachedPool</value>  
+        </constructor-arg>  
+        <property name="servers">  
+        <!-- ${memcached.server} -->
+            <list>  
+                <value>${memcached.server}</value>  
+            </list>  
+        </property>  
+        <property name="initConn">  
+            <value>${memcached.initConn}</value>  
+        </property>  
+        <property name="minConn">  
+            <value>${memcached.minConn}</value>  
+        </property>  
+        <property name="maxConn">  
+            <value>${memcached.maxConn}</value>  
+        </property>  
+        <property name="maintSleep">  
+            <value>${memcached.maintSleep}</value>  
+        </property>  
+        <property name="nagle">  
+            <value>${memcached.nagle}</value>  
+        </property>  
+        <property name="socketTO">  
+            <value>${memcached.socketTO}</value>  
+        </property>  
+    </bean>  
+	<bean id="memCachedClient" class="com.whalin.MemCached.MemCachedClient" >
+		<constructor-arg>
+			<value>whalinMemcachedPool</value>
+		</constructor-arg>
+	</bean>
 	<!-- 配置数据源 -->
 	<bean id="apiDataSource" class="com.alibaba.druid.pool.DruidDataSource"
 		init-method="init" destroy-method="close">

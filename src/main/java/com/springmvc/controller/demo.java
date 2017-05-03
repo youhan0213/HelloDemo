@@ -1,6 +1,7 @@
 package com.springmvc.controller;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,7 +19,10 @@ import com.springmvc.model.Student;
 import com.springmvc.result.APIResult;
 import com.springmvc.result.ArrayResult;
 import com.springmvc.result.MapResult;
+import com.springmvc.result.ObjResult;
 import com.springmvc.service.StudentService;
+import com.springmvc.util.Consts;
+import com.whalin.MemCached.MemCachedClient;
 
 
 
@@ -28,6 +32,9 @@ public class demo {
 	
 	@Resource
 	private StudentService stuService;
+	
+	@Resource
+	private MemCachedClient mcClient;
 	
 	private final static Logger logger =  LoggerFactory.getLogger(demo.class);
 	@RequestMapping("/test")
@@ -54,9 +61,29 @@ public class demo {
 		return new ArrayResult<>(list);
 	}
 	@RequestMapping("/students")
-	public APIResult stu(){
-		List<Student> list = stuService.getAll();
+	public APIResult stu(String sno){
+		
+		List<Student> list = null;
+		Object obj = mcClient.get(Consts.Memcached.COMMON_KEY +"_"+sno);
+		if(obj != null){
+			 list = (List) obj;
+		}else {
+			list = stuService.getAll();
+			mcClient.set(Consts.Memcached.COMMON_KEY + "_"+ sno , list);
+		}
 		
 		return new ArrayResult<>(list);
 	}
+	@RequestMapping("/test1")
+	public APIResult test1(String t){
+		
+		Object obj = mcClient.get("a");
+		if(obj == null){
+			mcClient.set("a", "student");
+		}
+		return new ObjResult(obj.toString());
+	}
+	
+	
+	
 }
