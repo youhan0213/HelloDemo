@@ -6,7 +6,23 @@
 		<result column="name" property="name"/>
 		<result column="age" property="age"/>
 	</resultMap>
+	<resultMap id="BaseResultMap" type="com.springmvc.model.itemModel" >
+    <id column="id" property="id" jdbcType="BIGINT" />
+    <result column="title" property="title" jdbcType="VARCHAR" />
+    <result column="sell_point" property="sellPoint" jdbcType="VARCHAR" />
+    <result column="price" property="price" jdbcType="BIGINT" />
+    <result column="num" property="num" jdbcType="INTEGER" />
+    <result column="barcode" property="barcode" jdbcType="VARCHAR" />
+    <result column="image" property="image" jdbcType="VARCHAR" />
+    <result column="cid" property="cid" jdbcType="BIGINT" />
+    <result column="status" property="status" jdbcType="TINYINT" />
+    <result column="created" property="created" jdbcType="TIMESTAMP" />
+    <result column="updated" property="updated" jdbcType="TIMESTAMP" />
+  </resultMap>
 	<select id="getAll" resultMap="baseModel">
 	select * from student ;
+	</select>
+	<select id="getAllItem" resultMap="BaseResultMap">
+		select * from tb_item limit 50;
 	</select>
 </mapper>

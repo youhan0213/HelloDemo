@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 
+import org.omg.Messaging.SYNC_WITH_TRANSPORT;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -16,6 +17,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.springmvc.model.Student;
+import com.springmvc.model.itemModel;
 import com.springmvc.result.APIResult;
 import com.springmvc.result.ArrayResult;
 import com.springmvc.result.MapResult;
@@ -64,14 +66,18 @@ public class demo {
 	public APIResult stu(String sno){
 		
 		List<Student> list = null;
+		long start = System.currentTimeMillis();
 		Object obj = mcClient.get(Consts.Memcached.COMMON_KEY +"_"+sno);
+		long end1 = System.currentTimeMillis();
+		long end2 = 0;
 		if(obj != null){
 			 list = (List) obj;
 		}else {
 			list = stuService.getAll();
-			mcClient.set(Consts.Memcached.COMMON_KEY + "_"+ sno , list);
+			 end2 = System.currentTimeMillis();
+			mcClient.add(Consts.Memcached.COMMON_KEY + "_"+ sno , list);
 		}
-		
+		logger.info("memcached take time =====>>>" + (end1-start) + "sql take time =====>>>" + (end2 - end1));
 		return new ArrayResult<>(list);
 	}
 	@RequestMapping("/test1")
@@ -82,6 +88,25 @@ public class demo {
 			mcClient.set("a", "student");
 		}
 		return new ObjResult(obj.toString());
+	}
+	
+	
+	@RequestMapping("/item")
+	public APIResult item(String item){
+		List<itemModel> list = null;
+		long s = System.currentTimeMillis();
+		Object obj = mcClient.get(Consts.Memcached.ITEM_KET + "_" + "item");
+		long e = System.currentTimeMillis();
+		long e2 = 0;
+		if(obj != null){
+			list = (List<itemModel>) obj;
+		}else {
+			list = stuService.getAllItem();
+		e2 = System.currentTimeMillis();
+			mcClient.add(Consts.Memcached.ITEM_KET + "_" + "item", list);
+		}
+		logger.info("sql take time ====>>>" + (e2 - e) + "|||||" + "mem take time ====>>>" + (e-s));
+		return new ArrayResult<>(list);
 	}
 	
 	

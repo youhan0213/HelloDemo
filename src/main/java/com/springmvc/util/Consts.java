@@ -6,6 +6,8 @@ public interface Consts {
 		
 		public static final String COMMON_KEY = "stu_data";
 		
+		public static final String ITEM_KET = "item_num";
+		
 		
 	}
 

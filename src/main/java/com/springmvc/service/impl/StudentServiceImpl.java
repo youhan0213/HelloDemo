@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import com.springmvc.model.Student;
+import com.springmvc.model.itemModel;
 import com.springmvc.mybatis.StudentMapper;
 import com.springmvc.service.StudentService;
 
@@ -18,6 +19,10 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public List<Student> getAll() {
 		return stuMapper.getAll();
+	}
+	@Override
+	public List<itemModel> getAllItem() {
+		return stuMapper.getAllItem();
 	}
 
 }
