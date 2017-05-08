@@ -66,18 +66,18 @@ public class demo {
 	public APIResult stu(String sno){
 		
 		List<Student> list = null;
-		long start = System.currentTimeMillis();
+		/*long start = System.currentTimeMillis();
 		Object obj = mcClient.get(Consts.Memcached.COMMON_KEY +"_"+sno);
 		long end1 = System.currentTimeMillis();
 		long end2 = 0;
 		if(obj != null){
 			 list = (List) obj;
-		}else {
+		}else {*/
 			list = stuService.getAll();
-			 end2 = System.currentTimeMillis();
+		/*	 end2 = System.currentTimeMillis();
 			mcClient.add(Consts.Memcached.COMMON_KEY + "_"+ sno , list);
 		}
-		logger.info("memcached take time =====>>>" + (end1-start) + "sql take time =====>>>" + (end2 - end1));
+		logger.info("memcached take time =====>>>" + (end1-start) + "sql take time =====>>>" + (end2 - end1));*/
 		return new ArrayResult<>(list);
 	}
 	@RequestMapping("/test1")

@@ -38,6 +38,7 @@
   <!--  启用aop  -->
 	<aop:aspectj-autoproxy proxy-target-class="true"/>
 	<bean id="aspectInterceptor" class="com.springmvc.interceptor.RequestAspect"/>
+	<bean id="serviceInterceptor" class="com.springmvc.interceptor.ServiceInterceptor"/> 
     <!-- 静态资源配置 -->  
     <mvc:resources location="/assets/" mapping="/assets/**"></mvc:resources>  
   
