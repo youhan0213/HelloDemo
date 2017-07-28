@@ -32,8 +32,24 @@
         </encoder>
     </appender>
 
-    <root level="debug">
+ 		<!-- logstash -->
+	<appender  name="logstash" class="org.apache.log4j.net.SocketAppender">
+    <param name="RemoteHost" value="127.0.0.1" />
+    <param name="port" value ="4560"/>
+    <param name="ReconnectionDelay" value="60000" />
+    <param name="LocationInfo" value="true" />
+    <param name="Threshold" value="DEBUG" />
+    <layout class="net.logstash.log4j.JSONEventLayoutV1" />
+	</appender>
+<!-- 	<appender name="logstah" class="org.apache.log4j.FileAppender">
+    <param name="Append" value="true" />
+    <param name="file"  value="/app.log " />
+    <layout class="net.logstash.log4j.JSONEventLayoutV1" />
+	</appender> -->
+
+    <root level="info">
     	<appender-ref ref="STDOUT"/>
+    	<appender-ref ref="logstash"/>
     </root>
 	<logger name="com.springmvc.log.ErrorLog"  level="debug">
         <appender-ref ref="STDOUT"/>

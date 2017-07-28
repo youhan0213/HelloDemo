@@ -78,6 +78,7 @@ public class demo {
 			mcClient.add(Consts.Memcached.COMMON_KEY + "_"+ sno , list);
 		}
 		logger.info("memcached take time =====>>>" + (end1-start) + "sql take time =====>>>" + (end2 - end1));*/
+			logger.info("data" + list);
 		return new ArrayResult<>(list);
 	}
 	@RequestMapping("/test1")
