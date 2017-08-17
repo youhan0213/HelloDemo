@@ -2,7 +2,9 @@ package conf;
   
 import java.io.File;  
 import java.io.FileFilter;  
-import java.io.IOException;  
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;  
 import java.util.Map;  
 import java.util.Properties;  
@@ -37,7 +39,7 @@ public class SysProperties implements Runnable{
     @Override  
     public void run() {  
         int checkDely= 5*1000 ;     // 配置文件自动检查间隔；  
-        int beginDely = 6*1000;    // 1分钟后运行配置文件自动检查功能。  
+        int beginDely = 5*1000;    // 1分钟后运行配置文件自动检查功能。  
         try {  
             Thread.sleep(beginDely);          
              System.out.println("启动 配置文件检查 线程，当前检测频率："+checkDely);  
@@ -69,18 +71,23 @@ public class SysProperties implements Runnable{
     private void loadAllConfigFiles(){  
         String tempPath = this.getClass().getResource(defaultPropFileName).getFile();    
         File fileDir = new File(tempPath);    
-        System.out.println("tempPath" + tempPath);
+        System.out.println("tempPath:"+"[" + tempPath + "]");
         fileDir.listFiles(new FileFilter() {  
             @Override  
             public boolean accept(File file) {  
                 try {  
                     String name = file.getName();  
                     String fullPath = file.getAbsolutePath();  
-                    System.out.println("fullPath" + fullPath);
+                    System.out.println("fullPath:" +"["+ fullPath + "]");
                     if(name.matches("^sys.*\\.properties$")){//properties  
-                        Long value = configFileModifyDate.get(fullPath);  
+                        Long value = configFileModifyDate.get(fullPath); 
+                        System.out.println("value" + "[" + value + "]");
                         if(value==null || value.longValue()!=file.lastModified()){  
-                             System.out.println("加载配置文件："+file);  
+                        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+                        	Date date = new Date(file.lastModified());
+                        	String time = sdf.format(date);
+                        	System.out.println("Time:" + "[" + time + "]");
+                        	System.out.println("加载配置文件："+file);  
                             loadPropertieFile(file);  
                             configFileModifyDate.put(fullPath,file.lastModified());  
                         }  
