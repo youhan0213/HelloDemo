@@ -2,59 +2,27 @@
 
 <configuration debug="false">
     <!-- 控制台 -->
-    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>%d{HH:mm:ss} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <!-- 出错日志 appender  -->
-    <appender name="ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 按天回滚 daily -->
-            <fileNamePattern>/data/logs/storeApi/error.log.%d{yyyy-MM-dd}</fileNamePattern>
-            <!-- 保存30天的日志 -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-    <!-- 重要访问日志 appender  -->
-    <appender name="FILEOUT" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <!-- 按天回滚 daily -->
-            <fileNamePattern>/data/logs/storeApi/api_bak.log.%d{yyyy-MM-dd}</fileNamePattern>
-            <!-- 保存30天的日志 -->
-            <maxHistory>30</maxHistory>
-        </rollingPolicy>
-        <encoder>
-            <pattern>%d{HH:mm:ss} %-5level %logger - %msg%n</pattern>
-        </encoder>
-    </appender>
-
- 		<!-- logstash -->
-	<appender  name="logstash" class="org.apache.log4j.net.SocketAppender">
-    <param name="RemoteHost" value="127.0.0.1" />
-    <param name="port" value ="4560"/>
-    <param name="ReconnectionDelay" value="60000" />
-    <param name="LocationInfo" value="true" />
-    <param name="Threshold" value="DEBUG" />
-    <layout class="net.logstash.log4j.JSONEventLayoutV1" />
-	</appender>
-<!-- 	<appender name="logstah" class="org.apache.log4j.FileAppender">
-    <param name="Append" value="true" />
-    <param name="file"  value="/app.log " />
-    <layout class="net.logstash.log4j.JSONEventLayoutV1" />
-	</appender> -->
-
-    <root level="info">
-    	<appender-ref ref="STDOUT"/>
-    	<appender-ref ref="logstash"/>
-    </root>
-	<logger name="com.springmvc.log.ErrorLog"  level="debug">
-        <appender-ref ref="STDOUT"/>
-    </logger>
+　　　　　　<appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender"> 
+	　　　　　　<encoder> 
+	　　　　　　　　<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern> 
+	　　　　　　</encoder> 
+　　　　　　</appender> 
+    <!-- 文件 -->
+                    　<appender name="FILE" class="ch.qos.logback.core.FileAppender"> 
+　　　　　　　　<file>D:\\testFile.log</file> 
+　　　　　　　　<append>true</append> 
+　　　　　　　　<encoder> 
+　　　　　　　　　　<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n</pattern> 
+　　　　　　　　</encoder> 
+　　　　　　</appender> 
     
+
+
+
+　　　　　　<root level="DEBUG"> 
+　　　　　　　　<appender-ref ref="STDOUT" /> 
+　　　　　　　　<appender-ref ref="FILE" /> 
+　　　　　　</root> 
 </configuration>
 
 
