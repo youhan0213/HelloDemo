@@ -16,6 +16,7 @@ public class HelloWorldJob implements Job{
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		
+		//写定时执行的代码
 		logger.info("This is a first spring combine quartz!");
 		logger.info("Welcome to spring_quartz World !" + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 		logger.info("let's begin!");
