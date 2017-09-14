@@ -195,6 +195,13 @@
             <artifactId>quartz-jobs</artifactId>
             <version>2.2.1</version>
      </dependency>
+     <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch -->
+	<dependency>
+	    <groupId>org.springframework.data</groupId>
+	    <artifactId>spring-data-elasticsearch</artifactId>
+	    <version>2.1.7.RELEASE</version>
+	</dependency>
+     
 	   
   </dependencies>
  <repositories>

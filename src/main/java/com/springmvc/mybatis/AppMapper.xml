@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zeasn.mybatis.YouhAppMapper">
+	<resultMap id="BaseResultMap" type="com.zeasn.bean.AppVersionInfoBean">
+		<id column="APP_ID" property="appId" />
+		<result column="APPGALLERYName" property="appgalleryName" />
+		<result column="NAME" property="name" />
+		<result column="VERSION_NAME" property="versionName" />
+		<result column="VERSION_CODE" property="versionCode" />
+		<result column="PACKAGE_NAME" property="packageName" />
+		<result column="DOWN_SIZE" property="downSize" />
+		<result column="INSTALL_SIZE" property="installSize" />
+		<result column="FILL_ADDRESS" property="fillAddress" />
+		<result column="TYPE_OF_APP" property="typeOfApp" />
+		<result column="APP_LAUNCH_TYPE" property="appLaunchType" />
+		<result column="LANG" property="lang" />
+		<result column="SERVICE_ID" property="serviceId" />
+		<result column="USE_DIVERSITY_RULE" property="useDiversityRule" />
+		<result column="IS_SPECIFIC" property="isSpecific" />
+		<result column="SECRET_KEY" property="secretKey" />
+		<result column="ENABLE_PARENTAL_API" property="enableParentalApi" />
+		<result column="ADD_DEVICE_INFO" property="addDeviceInfo" />
+		<result column="SEND_GUDID" property="sendGudid" />
+		<result column="IS_AVAILABLE" property="isAvailable" />
+		<result column="RESTRICT_APP_TO_COUNTRIES" property="restrictAppToCountries" />
+		<result column="RESTRICT_APP_TO_CONSUMERS" property="restrictAppToConsumers" />
+		<result column="WIDGET" property="widget" />
+		<result column="ALLOW_MULTISCREEN" property="allowMultiscreen" />
+		<result column="MULTI_VIEW_ALLOWED" property="multiViewAllowed" />
+		<result column="VIDEO_BROADCAST_ALLOWED" property="videoBroadcastAllowed" />
+		<result column="MULTISCREENNAME" property="multiscreenname" />
+		<result column="VERSION_RELEASE_NOTE" property="versionReleaseNote" />
+		<result column="NETTV_PREVIEW_ALLOWED" property="nettvPreviewAllowed" />
+		<result column="SEND_3D_PARAMETER" property="send3DParameter" />
+		<result column="NETTV_APP_DISABLE_URL" property="nettvAppDisableUrl" />
+		<result column="NETTV_APP_EXPIRY_URL" property="nettvAppExpiryUrl" />
+		<result column="APP_VIEWER_MIN_AGE" property="appViewerMinAge" />
+		<result column="LAUNCHER_BACK_COLOR" property="launcherBackColor" />
+		<result column="is_diversity_rule" property="isDiversityRule" />
+		<result column="IS_VOD" property="isVod" />
+		<result column="IS_ADULT" property="isAdult" />
+		<result column="MINIPORTAL_NAME" property="miniportalName" />
+		<result column="is_diversity_rule" property="isDiversityRule" />
+		<result column="ON_USE" property="onUse" />
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CREATE_BY" property="createBy" />
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="UPDATE_BY" property="updateBy" />
+	</resultMap>
+	<resultMap type="com.zeasn.bean.AppDetailBean" id="AppDetail">
+		<result column="appType" property="appType"/>
+		<result column="iconAddress" property="iconAddress"/>
+		<result column="appId" property="appId"/>
+		<result column="appName" property="appName"/>
+		<result column="packageName" property="packageName"/>
+		<result column="menuName" property="menuName"/>
+		<result column="versionCode" property="versionCode"/>
+		<result column="versionName" property="versionName"/>
+		<result column="FILL_ADDRESS" property="fileAddress"/>
+		<result column="ALT_LANG_SERVICE_LINK" property="linuxLink"/>
+		<result column="area" property="area"/>
+		<result column="UPDATE_TIME" property="updateTime" />
+		<result column="ON_USE" property="onUse" />
+		<result column="appVersionId" property="appVersionId"/>
+		<result column="CREATE_TIME" property="createTime" />
+		<result column="CREATE_BY" property="createBy" />
+		<result column="UPDATE_BY" property="updateBy" />
+	</resultMap>
+	<resultMap type="com.zeasn.bean.AppVersionAreaBean" id="VersionArea">
+		<result column="AREACODE" property="areaCode"/>
+	</resultMap>
+	<resultMap type="com.zeasn.bean.AppVersionInfoBean" id="ExtendLanguage" extends="BaseResultMap">
+		<result column="ALT_LANG_NAME" property="altLangName"/>
+		<result column="MENU_ID" property="menuId"/>
+	</resultMap>
+	<select id="checkPackageName" resultType="int">
+		select count(1) from z_app_version zav where 1=1
+		<if test="null !=appId">AND zav.APP_ID != #{appId}</if>
+		<if test="null !=packageName">AND zav.PACKAGE_NAME = #{packageName}</if>
+	</select>
+	<select id="getVersionById" parameterType="int" resultMap="ExtendLanguage">
+		SELECT  av.*,ai.MENU_ID,avl.ALT_LANG_NAME FROM z_app_version  av 
+		LEFT JOIN 
+		z_app_info ai
+		ON ai.ID = av.APP_ID
+		LEFT JOIN ( SELECT APP_VERSION_ID,ALT_LANG_NAME,MAX(IS_DEFAULT) FROM
+		z_app_version_language GROUP BY APP_VERSION_ID  
+		)avl 
+		ON	av.ID = avl.APP_VERSION_ID 
+		WHERE av.APP_ID = #{appId}
+		ORDER BY av.VERSION_CODE DESC
+	</select>
+	<select id="searchApp" resultMap="AppDetail">
+  			SELECT
+			zdm.`NAME` AS menuName,
+			MAX(zav.`VERSION_CODE`) AS versionCode,
+			zav.TYPE_OF_APP AS appType,
+			zavl.ALT_LANG_NAME AS appName,
+			zav.`ID` AS appVersionId,
+			zav.FILL_ADDRESS AS fileAddress,
+			zav.`VERSION_NAME` AS versionName,
+			zap.`ID` AS appId,
+			zalicon.`ADDRESS` AS iconAddress,
+			zavl.ALT_LANG_SERVICE_LINK AS linuxLink,
+			zav.PACKAGE_NAME AS packageName,
+			zav.ON_USE,
+			zav.UPDATE_TIME,
+			GROUP_CONCAT(DISTINCT zava.AREACODE) AS area
+		FROM
+			z_app_info zap
+		LEFT JOIN z_app_version zav ON zap.`ID` = zav.`APP_ID`
+		LEFT JOIN z_app_version_area zava ON zava.APP_VERSION_ID = zav.ID
+		LEFT JOIN z_default_menu zdm ON zap.`MENU_ID` = zdm.`ID`
+		AND zdm.`ON_USE` = 1
+		LEFT JOIN z_app_version_unit_category zpvuc ON zpvuc.`APP_VERSION_ID` = zav.`ID`
+		AND zpvuc.`ON_USE` = 1
+		LEFT JOIN z_app_version_language zavl ON zav.`ID` = zavl.`APP_VERSION_ID`
+		AND zavl.`IS_DEFAULT` = 1
+		LEFT JOIN z_app_lang_icon_screen zalicon ON zavl.`ID` = zalicon.`APP_VERSION_LANGUAGE_ID`
+		LEFT JOIN z_icon_screen_config zisc ON zalicon.ICON_SCREEN_ID = zisc.ID
+		AND zisc.IS_ICON = 1
+		WHERE
+			1 = 1
+		AND zisc.IS_ICON = 1
+		AND zav.`VERSION_CODE` = (
+			SELECT
+				MAX(zv.`VERSION_CODE`)
+			FROM
+				z_app_info zi,
+				z_app_version zv
+			LEFT JOIN z_app_version_language zavl ON zv.ID = zavl.APP_VERSION_ID
+			WHERE
+				zi.`ID` = zv.`APP_ID`
+			AND zv.`APP_ID` = zap.`ID`
+		<if test="null != onUse">AND zv.ON_USE =#{onUse}</if>
+		<if test="null != appName and '' != appName">AND zavl.ALT_LANG_NAME LIKE CONCAT('%',#{appName},'%')</if>
+		<if test="null != appType and '' != appType">AND zv.type_of_app = #{appType}</if>
+		)
+		<if test="null != appName and '' != appName">AND zavl.ALT_LANG_NAME LIKE CONCAT('%',#{appName},'%') </if>
+	 	<if test="null != appType and '' != appType">AND zav.type_of_app =#{appType}</if>
+		<if test="null != onUse">AND zav.ON_USE =#{onUse}</if>
+		<if test="null != area and '' != area">AND zava.AREACODE LIKE CONCAT('%',#{area},'%')</if>
+		<if test="null != menuId ">AND zap.MENU_ID = #{menuId}</if>
+		<if test="null !=packageName and ''!=packageName">AND zav.PACKAGE_NAME LIKE CONCAT('%',#{packageName},'%') </if>
+		<if test="null != appId ">AND zap.ID = #{appId}</if>
+		<if test="null != appVersionId ">AND zav.ID = #{appVersionId}</if>
+		GROUP BY
+			zap.`ID`
+		ORDER BY
+			zav.UPDATE_TIME DESC
+	<if test="psize > 0">
+  			limit #{start},#{psize}
+  		</if>
+	</select>
+	<update id="setAppVersionOnUse" >
+		update z_app_version zav SET zav.ON_USE = #{onUse} WHERE zav.ID = #{appVersionId};
+	</update>
+
+	<update id="setAppOnUse" >
+		update z_app_version zav SET zav.ON_USE = #{onUse} WHERE zav.app_id = #{appId};
+	</update>
+
+	
+	<select id="checdMaxAppVersion" resultType="long">
+
+
+	SELECT
+  CASE
+    WHEN id = #{appVersionId} 
+    THEN app_id 
+    ELSE 0 
+  END 
+FROM 
+    
+ (SELECT 
+zav2.id,
+zav2.app_id
+FROM
+  
+  (SELECT 
+    
+    MAX(zav.`VERSION_CODE`) version_code,
+    zav.app_id 
+  FROM
+    z_app_version zav 
+  WHERE zav.`APP_ID` = 
+    (SELECT 
+      app_id 
+    FROM
+      z_app_version 
+    WHERE id = #{appVersionId})) ss
+    LEFT JOIN z_app_version zav2 ON zav2.app_id = ss.app_id AND ss.version_code = zav2.version_code limit 1) sss
+
+	</select>
+	
+	<select id="countApp" resultType="int">
+     SELECT
+			count(1)
+		FROM
+			(
+				SELECT
+			zdm.`NAME` AS menuName,
+			MAX(zav.`VERSION_CODE`) AS versionCode,
+			zav.TYPE_OF_APP AS appType,
+			zavl.ALT_LANG_NAME AS appName,
+			zav.`ID` AS appVersionId,
+			zav.FILL_ADDRESS AS fileAddress,
+			zav.`VERSION_NAME` AS versionName,
+			zap.`ID` AS appId,
+			zalicon.`ADDRESS` AS iconAddress,
+			zavl.ALT_LANG_SERVICE_LINK AS linuxLink,
+			zav.PACKAGE_NAME AS packageName,
+			zav.ON_USE,
+			zav.UPDATE_TIME,
+			GROUP_CONCAT(DISTINCT zava.AREACODE) AS AREA
+		FROM
+			z_app_info zap
+		LEFT JOIN z_app_version zav ON zap.`ID` = zav.`APP_ID`
+		LEFT JOIN z_app_version_area zava ON zava.APP_VERSION_ID = zav.ID
+		LEFT JOIN z_default_menu zdm ON zap.`MENU_ID` = zdm.`ID`
+		AND zdm.`ON_USE` = 1
+		LEFT JOIN z_app_version_unit_category zpvuc ON zpvuc.`APP_VERSION_ID` = zav.`ID`
+		AND zpvuc.`ON_USE` = 1
+		LEFT JOIN z_app_version_language zavl ON zav.`ID` = zavl.`APP_VERSION_ID`
+		AND zavl.`IS_DEFAULT` = 1
+		LEFT JOIN z_app_lang_icon_screen zalicon ON zavl.`ID` = zalicon.`APP_VERSION_LANGUAGE_ID`
+		LEFT JOIN z_icon_screen_config zisc ON zalicon.ICON_SCREEN_ID = zisc.ID
+		AND zisc.IS_ICON = 1
+		WHERE
+			1 = 1
+		AND zisc.IS_ICON = 1
+		AND zav.`VERSION_CODE` = (
+			SELECT
+				MAX(zv.`VERSION_CODE`)
+			FROM
+				z_app_info zi,
+				z_app_version zv
+			LEFT JOIN z_app_version_language zavl ON zv.ID = zavl.APP_VERSION_ID
+			WHERE
+				zi.`ID` = zv.`APP_ID`
+			AND zv.`APP_ID` = zap.`ID`
+		<if test="null != onUse">AND zv.ON_USE =#{onUse}</if>
+		<if test="null != appName and '' != appName">AND zavl.ALT_LANG_NAME LIKE CONCAT('%',#{appName},'%')</if>
+		<if test="null != appType and '' != appType">AND zv.type_of_app = #{appType}</if>
+		)
+		<if test="null != appName and '' != appName">AND zavl.ALT_LANG_NAME LIKE CONCAT('%',#{appName},'%') </if>
+	 	<if test="null != appType and '' != appType">AND zav.type_of_app =#{appType}</if>
+		<if test="null != onUse">AND zav.ON_USE =#{onUse}</if>
+		<if test="null != area and '' != area">AND zava.AREACODE LIKE CONCAT('%',#{area},'%')</if>
+		<if test="null != menuId ">AND zap.MENU_ID = #{menuId}</if>
+		<if test="null !=packageName and ''!=packageName">AND zav.PACKAGE_NAME LIKE CONCAT('%',#{packageName},'%') </if>
+		<if test="null != appId ">AND zap.ID = #{appId}</if>
+		<if test="null != appVersionId ">AND zav.ID = #{appVersionId}</if>
+		GROUP BY
+			zap.`ID`
+		ORDER BY
+			zav.UPDATE_TIME DESC
+	) ss
+	</select>
+</mapper>
