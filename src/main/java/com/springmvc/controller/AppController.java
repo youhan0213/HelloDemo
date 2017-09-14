@@ -2,6 +2,8 @@ package com.springmvc.controller;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,11 +17,14 @@ import com.springmvc.util.TimeTranslator;
 @Controller
 public class AppController {
 	
+	private static final Logger logger = LoggerFactory.getLogger(AppController.class);
+	
 	@Autowired
 	private AppService appService;
 	
 	@RequestMapping("searchApp")
 	public APIResult searchApp(String appName,String appType,Integer start,Integer psize,Integer appId,Long appVersionId,Integer onUse,String packageName,String area,Integer menuId){
+		long s = System.currentTimeMillis();
 		int count = appService.countApp(appName,appType,appId,appVersionId,onUse,packageName,area,menuId);
 		List<AppDetailBean> appDetail = null;
 		if(start == null ){
@@ -40,6 +45,8 @@ public class AppController {
 				 }
 			 }
 		}
+		long end = System.currentTimeMillis();
+		logger.info("耗时：[" + (end - s) +"毫秒]");
 		return new PageResult<>(appDetail, count, psize);
 	}
 }
