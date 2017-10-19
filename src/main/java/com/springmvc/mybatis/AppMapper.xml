@@ -32,28 +32,21 @@
 			zav.FILL_ADDRESS AS fileAddress,
 			zav.`VERSION_NAME` AS versionName,
 			zap.`ID` AS appId,
-			zalicon.`ADDRESS` AS iconAddress,
 			zavl.ALT_LANG_SERVICE_LINK AS linuxLink,
 			zav.PACKAGE_NAME AS packageName,
 			zav.ON_USE,
-			zav.UPDATE_TIME,
-			GROUP_CONCAT(DISTINCT zava.AREACODE) AS area
+			zav.UPDATE_TIME
 		FROM
 			z_app_info zap
 		LEFT JOIN z_app_version zav ON zap.`ID` = zav.`APP_ID`
-		LEFT JOIN z_app_version_area zava ON zava.APP_VERSION_ID = zav.ID
 		LEFT JOIN z_default_menu zdm ON zap.`MENU_ID` = zdm.`ID`
 		AND zdm.`ON_USE` = 1
 		LEFT JOIN z_app_version_unit_category zpvuc ON zpvuc.`APP_VERSION_ID` = zav.`ID`
 		AND zpvuc.`ON_USE` = 1
 		LEFT JOIN z_app_version_language zavl ON zav.`ID` = zavl.`APP_VERSION_ID`
 		AND zavl.`IS_DEFAULT` = 1
-		LEFT JOIN z_app_lang_icon_screen zalicon ON zavl.`ID` = zalicon.`APP_VERSION_LANGUAGE_ID`
-		LEFT JOIN z_icon_screen_config zisc ON zalicon.ICON_SCREEN_ID = zisc.ID
-		AND zisc.IS_ICON = 1
 		WHERE
 			1 = 1
-		AND zisc.IS_ICON = 1
 		AND zav.`VERSION_CODE` = (
 			SELECT
 				MAX(zv.`VERSION_CODE`)
@@ -71,7 +64,6 @@
 		<if test="null != appName and '' != appName">AND zavl.ALT_LANG_NAME LIKE CONCAT('%',#{appName},'%') </if>
 	 	<if test="null != appType and '' != appType">AND zav.type_of_app =#{appType}</if>
 		<if test="null != onUse">AND zav.ON_USE =#{onUse}</if>
-		<if test="null != area and '' != area">AND zava.AREACODE LIKE CONCAT('%',#{area},'%')</if>
 		<if test="null != menuId ">AND zap.MENU_ID = #{menuId}</if>
 		<if test="null !=packageName and ''!=packageName">AND zav.PACKAGE_NAME LIKE CONCAT('%',#{packageName},'%') </if>
 		<if test="null != appId ">AND zap.ID = #{appId}</if>
@@ -91,40 +83,23 @@
 	
 	<select id="countApp" resultType="int">
      SELECT
-			count(1)
+			count(*)
 		FROM
 			(
 				SELECT
-			zdm.`NAME` AS menuName,
-			MAX(zav.`VERSION_CODE`) AS versionCode,
-			zav.TYPE_OF_APP AS appType,
-			zavl.ALT_LANG_NAME AS appName,
-			zav.`ID` AS appVersionId,
-			zav.FILL_ADDRESS AS fileAddress,
-			zav.`VERSION_NAME` AS versionName,
-			zap.`ID` AS appId,
-			zalicon.`ADDRESS` AS iconAddress,
-			zavl.ALT_LANG_SERVICE_LINK AS linuxLink,
-			zav.PACKAGE_NAME AS packageName,
-			zav.ON_USE,
-			zav.UPDATE_TIME,
-			GROUP_CONCAT(DISTINCT zava.AREACODE) AS AREA
+			zap.`ID` AS appId
 		FROM
 			z_app_info zap
 		LEFT JOIN z_app_version zav ON zap.`ID` = zav.`APP_ID`
-		LEFT JOIN z_app_version_area zava ON zava.APP_VERSION_ID = zav.ID
 		LEFT JOIN z_default_menu zdm ON zap.`MENU_ID` = zdm.`ID`
 		AND zdm.`ON_USE` = 1
 		LEFT JOIN z_app_version_unit_category zpvuc ON zpvuc.`APP_VERSION_ID` = zav.`ID`
 		AND zpvuc.`ON_USE` = 1
 		LEFT JOIN z_app_version_language zavl ON zav.`ID` = zavl.`APP_VERSION_ID`
 		AND zavl.`IS_DEFAULT` = 1
-		LEFT JOIN z_app_lang_icon_screen zalicon ON zavl.`ID` = zalicon.`APP_VERSION_LANGUAGE_ID`
-		LEFT JOIN z_icon_screen_config zisc ON zalicon.ICON_SCREEN_ID = zisc.ID
-		AND zisc.IS_ICON = 1
+
 		WHERE
 			1 = 1
-		AND zisc.IS_ICON = 1
 		AND zav.`VERSION_CODE` = (
 			SELECT
 				MAX(zv.`VERSION_CODE`)
@@ -142,7 +117,6 @@
 		<if test="null != appName and '' != appName">AND zavl.ALT_LANG_NAME LIKE CONCAT('%',#{appName},'%') </if>
 	 	<if test="null != appType and '' != appType">AND zav.type_of_app =#{appType}</if>
 		<if test="null != onUse">AND zav.ON_USE =#{onUse}</if>
-		<if test="null != area and '' != area">AND zava.AREACODE LIKE CONCAT('%',#{area},'%')</if>
 		<if test="null != menuId ">AND zap.MENU_ID = #{menuId}</if>
 		<if test="null !=packageName and ''!=packageName">AND zav.PACKAGE_NAME LIKE CONCAT('%',#{packageName},'%') </if>
 		<if test="null != appId ">AND zap.ID = #{appId}</if>
@@ -152,5 +126,27 @@
 		ORDER BY
 			zav.UPDATE_TIME DESC
 	) ss
+	</select>
+	<select id="getIconUrl" resultType="String">
+	SELECT
+	    alis.ADDRESS
+	FROM
+	    z_app_lang_icon_screen alis
+	LEFT JOIN z_app_version_language avl ON alis.APP_VERSION_LANGUAGE_ID = avl.ID
+	LEFT JOIN z_icon_screen_config isc ON alis.ICON_SCREEN_ID = isc.ID
+	WHERE
+	    1 = 1
+	AND isc.IS_ICON = 1
+	AND alis.ICON_SCREEN_ID = 1
+	AND avl.APP_VERSION_ID = #{appVersionId}
+	 LIMIT 1
+	</select>
+	<select id="getAppArea" resultType="String">
+	SELECT
+	    GROUP_CONCAT(DISTINCT ava.AREACODE ORDER BY ava.AREACODE ASC)
+	FROM
+	    z_app_version_area ava
+	WHERE
+	    ava.APP_VERSION_ID = #{appVersionId}
 	</select>
 </mapper>
