@@ -20,34 +20,7 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 public class ReadExcelUtil {
-	/*
-	 * public Map<String,String> readExcel(String filePath,String title) {
-	 * 
-	 * Map<String,String> map = new HashMap<String, String>(); try {
-	 * HSSFWorkbook wordbook = new HSSFWorkbook(new FileInputStream(filePath));
-	 * 
-	 * // 在Excel文档中，第一张工作表的缺省索引是0 HSSFSheet sheet = wordbook.getSheetAt(0); //
-	 * 获取到Excel文件中的所有行数 int rows = sheet.getPhysicalNumberOfRows(); int
-	 * max_cells = 0; for(int i = 0 ; i < rows;i++) { HSSFRow row =
-	 * sheet.getRow(i); if(row != null) { int cells =
-	 * row.getPhysicalNumberOfCells(); if(max_cells < cells) { max_cells =
-	 * cells; }
-	 * 
-	 * } } System.out.println(max_cells); //遍历行
-	 * 
-	 * for(int i = 0; i < rows; i++) { //读取左上端单元格 HSSFRow row = sheet.getRow(i);
-	 * if(row !=null ) { String value = ""; //遍历列 String b_id = null;
-	 * 
-	 * for(int j = 0; j < max_cells; j++) { //获取列值 HSSFCell cell =
-	 * row.getCell(j); if(cell == null) { value += "NULL,"; }else {
-	 * 
-	 * } } } } } catch (FileNotFoundException e) { // TODO Auto-generated catch
-	 * block e.printStackTrace(); } catch (IOException e) { // TODO
-	 * Auto-generated catch block e.printStackTrace(); }
-	 * 
-	 * 
-	 * return null; }
-	 */
+
 
 	public static Map<String, String> readExcel(String filePath, String title) {
 
@@ -164,11 +137,11 @@ public class ReadExcelUtil {
 		Map<String, String> readExcel = readExcel("D://mstarlang.xls", "langcode");
 		System.out.println(readExcel);
 		Iterator<String> iterator = readExcel.keySet().iterator();
-		while(iterator.hasNext()) {
+/*		while(iterator.hasNext()) {
 			String key = iterator.next();
 			String value = readExcel.get(key);
 			System.out.println(key + "====" + value);
-		}
+		}*/
 		System.out.println(readExcel.size());
 	}
 }

@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.elasticsearch.core.ElasticsearchTemplate;
-import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -28,8 +27,8 @@ public class AppController {
 	@Autowired
 	private AppService appService;
 	
-	@Resource
-	private MongoTemplate mongoTemplate;
+/*	@Resource
+	private MongoTemplate mongoTemplate;*/
 	
 //	@Resource
 //	private AppRepository appRepository;

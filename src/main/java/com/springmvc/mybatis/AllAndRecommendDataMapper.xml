@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springmvc.mybatis.AllAndRecommendDataMapper">
+      <resultMap id="BaseResultMap" type="com.springmvc.model.LangInfo" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="lang_code" property="langCode" jdbcType="VARCHAR" />
+    <result column="all" property="all" jdbcType="VARCHAR" />
+    <result column="recommend" property="recommend" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <select id="query" resultMap="BaseResultMap">
+  SELECT * FROM lang_all_recommend
+  </select>
+</mapper>
