@@ -49,16 +49,12 @@ public class AllAndRecommendInitData {
 					HttpClientUtil.sendHttpForGet(b1);
 					HttpClientUtil.sendHttpForGet(b2);
 				} catch (ClientProtocolException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
 		}
-		
-		
 		return new MessageResult();
 	}
 }
