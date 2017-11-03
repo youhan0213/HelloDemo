@@ -1,5 +1,6 @@
 package com.springmvc.result;
 
+import com.springmvc.error.ServiceError;
 
 public class MessageResult extends APIResult {
 
@@ -19,5 +20,8 @@ public class MessageResult extends APIResult {
 	}
 	public void setMessage(String message) {
 		this.message = message;
+	}
+	public MessageResult(ServiceError error) {
+		this.error = error.getCode();
 	}
 }

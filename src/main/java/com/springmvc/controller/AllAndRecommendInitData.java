@@ -9,6 +9,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.springmvc.error.ServiceError;
 import com.springmvc.model.LangInfo;
 import com.springmvc.mybatis.AllAndRecommendDataMapper;
 import com.springmvc.result.APIResult;
