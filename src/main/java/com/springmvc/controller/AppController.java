@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,6 @@ public class AppController {
 	
 	
 	
-	@Test
 	@RequestMapping("searchApp")
 	public APIResult searchApp(String appName,String appType,Integer start,Integer psize,Integer appId,Long appVersionId,Integer onUse,String packageName,String area,Integer menuId){
 		int count = appService.countApp(appName,appType,appId,appVersionId,onUse,packageName,area,menuId);
