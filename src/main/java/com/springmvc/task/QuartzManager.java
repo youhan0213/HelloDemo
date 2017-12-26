@@ -8,6 +8,7 @@ import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.SchedulerFactory;
 import org.quartz.Trigger;
+import org.quartz.Trigger.TriggerState;
 import org.quartz.TriggerBuilder;
 import org.quartz.TriggerKey;
 import org.quartz.impl.StdSchedulerFactory;
@@ -247,5 +248,22 @@ public class QuartzManager {
 	        } catch (Exception e) {    
 	            throw new RuntimeException(e);    
 	        }    
-	    }   
+	    } 
+	    
+	    /**
+	     * job运行状态
+	     */
+	   public static String jobStatus(String jobName) {
+		   try {
+			StdSchedulerFactory schedulerFactory = new StdSchedulerFactory();
+			   Scheduler scheduler = schedulerFactory.getScheduler();
+			    TriggerKey triggerKey = TriggerKey.triggerKey(jobName, TRIGGER_GROUP_NAME);  
+			   TriggerState state = scheduler.getTriggerState(triggerKey);
+			   String name = state.name();
+			   return name;
+		} catch (SchedulerException e) {
+			e.printStackTrace();
+			return "error";
+		}
+	   }
 }

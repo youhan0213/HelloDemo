@@ -33,4 +33,36 @@ public class LoadTask {
             return false;  
         }  
     }  
+    
+    /**
+     * 停用job
+     */
+    public static boolean stopJob(long msgId) {
+    	try {
+			QuartzManager.pauseJob((msgId+"_job"));
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+    }
+    /**
+     * 修改任务的执行实行
+     */
+    public static boolean modifyJobTime(long msgId) {
+    	try {
+			QuartzManager.modifyJobTime((msgId+"_job"), "0/1 * * * * ?");
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+    }
+    /**
+     * 查询任务的执行状态
+     */
+    public static String jobStatus(long msgId) {
+    	String jobStatus = QuartzManager.jobStatus((msgId+"_job"));
+    	return jobStatus;
+    }
 }
