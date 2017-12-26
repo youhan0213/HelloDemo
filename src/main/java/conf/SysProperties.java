@@ -36,7 +36,6 @@ public class SysProperties implements Runnable{
     /** 
      * 系统配置文件监测，每5秒检测一次，如果配置文件有变化，则重新加载。 
      */  
-    @Override  
     public void run() {  
         int checkDely= 5*1000 ;     // 配置文件自动检查间隔；  
         int beginDely = 5*1000;    // 1分钟后运行配置文件自动检查功能。  
@@ -73,7 +72,6 @@ public class SysProperties implements Runnable{
         File fileDir = new File(tempPath);    
         System.out.println("tempPath:"+"[" + tempPath + "]");
         fileDir.listFiles(new FileFilter() {  
-            @Override  
             public boolean accept(File file) {  
                 try {  
                     String name = file.getName();  

@@ -3,7 +3,6 @@ package and.test;
 public class JVMTest {
 	public static void main(String[] args) {
 		new Thread(new Runnable() {
-			@Override
 			public void run() {
 				for (int i = 0; i < 5; i++) {
 					try {

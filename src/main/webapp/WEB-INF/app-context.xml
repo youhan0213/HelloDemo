@@ -121,18 +121,18 @@
         3：定义调度器，并将Trigger注册到Scheduler
      -->
     <!-- 1：定义任务的bean ，这里使用JobDetailFactoryBean,也可以使用MethodInvokingJobDetailFactoryBean ，配置类似-->
-    <bean name="hwJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
-        <!-- 指定job的名称 -->
+<!--     <bean name="hwJob" class="org.springframework.scheduling.quartz.JobDetailFactoryBean">
+        指定job的名称
         <property name="name" value="hw_job"/>
-        <!-- 指定job的分组 -->
+        指定job的分组
         <property name="group" value="hw_group"/>
-        <!-- 指定具体的job类 -->
+        指定具体的job类
         <property name="jobClass" value="com.springmvc.controller.HelloWorldJob"/>
-        <!-- 必须设置为true，如果为false，当没有活动的触发器与之关联时会在调度器中会删除该任务  -->
+        必须设置为true，如果为false，当没有活动的触发器与之关联时会在调度器中会删除该任务 
         <property name="durability" value="true"/>
-        <!-- 指定spring容器的key，如果不设定在job中的jobmap中是获取不到spring容器的 -->
+        指定spring容器的key，如果不设定在job中的jobmap中是获取不到spring容器的
         <property name="applicationContextJobDataKey" value="applicationContext"/>
-    </bean>
+    </bean> -->
     <!-- 2.1：定义触发器的bean，定义一个Simple的Trigger，一个触发器只能和一个任务进行绑定 -->
     <!-- <bean name="simpleTrigger" class="org.springframework.scheduling.quartz.SimpleTriggerFactoryBean">
         指定Trigger的名称
@@ -150,27 +150,63 @@
     </bean> -->
     
     <!-- 2.2：定义触发器的bean，定义一个Cron的Trigger，一个触发器只能和一个任务进行绑定 -->
-    <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <!-- 指定Trigger的名称 -->
+<!--     <bean id="cronTrigger" class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        指定Trigger的名称
         <property name="name" value="hw_trigger"/>
-        <!-- 指定Trigger的名称 -->
+        指定Trigger的名称
         <property name="group" value="hw_trigger_group"/>
-        <!-- 指定Tirgger绑定的Job -->
+        指定Tirgger绑定的Job
         <property name="jobDetail" ref="hwJob"/>
-        <!-- 指定Cron 的表达式 ，当前是每隔1s运行一次 -->
-        <!-- <property name="cronExpression" value="0/5 * * * * ?" /> -->
+        指定Cron 的表达式 ，当前是每隔1s运行一次
+        <property name="cronExpression" value="0/5 * * * * ?" />
         <property name="cronExpression" value="0 */1 * * * ?" />
-    </bean>
+    </bean> -->
     
     
     <!-- 3.定义调度器，并将Trigger注册到调度器中 -->
-    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+<!--     <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
         <property name="triggers">
             <list>
-                <!-- <ref bean="simpleTrigger"/> -->
+                <ref bean="simpleTrigger"/>
                 <ref bean="cronTrigger"/>
             </list>
         </property>
-        <!-- <property name="autoStartup" value="true" /> -->
-    </bean>
+        <property name="autoStartup" value="true" />
+    </bean> -->
+    <!-- 使用MethodInvokingJobDetailFactoryBean，任务类可以不实现Job接口，通过targetMethod指定调用方法-->
+<bean id="taskJob" class="com.springmvc.task.DataConversionTask"/>
+<bean id="jobDetail" class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+    <property name="group" value="job_work"/>
+    <property name="name" value="job_work_name"/>
+    <!--false表示等上一个任务执行完后再开启新的任务-->
+    <property name="concurrent" value="false"/>
+    <property name="targetObject">
+        <ref bean="taskJob"/>
+    </property>
+    <property name="targetMethod">
+        <value>run</value>
+    </property>
+</bean>
+
+<!--  调度触发器 -->
+<bean id="myTrigger"
+      class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+    <property name="name" value="work_default_name"/>
+    <property name="group" value="work_default"/>
+    <property name="jobDetail">
+        <ref bean="jobDetail" />
+    </property>
+    <property name="cronExpression">
+        <value>0/5 * * * * ?</value>
+    </property>
+</bean>
+
+<!-- 调度工厂 -->
+<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+    <property name="triggers">
+        <list>
+            <ref bean="myTrigger"/>
+        </list>
+    </property>
+</bean>
 </beans>

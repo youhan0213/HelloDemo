@@ -12,7 +12,6 @@ public class MyRunnable implements Runnable {
 		tb.start();
 	}
 
-	@Override
 	public void run() {
 		for (int i = 0; i < 3; i++) {
 			foo.fix(30);

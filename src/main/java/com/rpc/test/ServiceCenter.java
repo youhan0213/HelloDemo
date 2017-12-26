@@ -25,14 +25,14 @@ public class ServiceCenter implements Server {
 	public ServiceCenter(int port) {
 		this.port = port;
 	}
-	@Override
+	
 	public void stop() {
 		isRunning = false;
 		executor.shutdown();
 
 	}
 
-	@Override
+	
 	public void start() throws IOException {
 		ServerSocket server = new ServerSocket();
 		
@@ -57,7 +57,7 @@ public class ServiceCenter implements Server {
 			this.clent = client;
 		}
 
-		@Override
+		
 		public void run() {
 			ObjectInputStream input = null;
 			ObjectOutputStream output = null;
@@ -108,17 +108,17 @@ public class ServiceCenter implements Server {
 		} 
 	}
 
-	@Override
+	
 	public void register(@SuppressWarnings("rawtypes") Class serviceInterface, @SuppressWarnings("rawtypes") Class impl) {
 		serviceRegisty.put(serviceInterface.getName(), impl);
 	}
 
-	@Override
+	
 	public boolean isRunning() {
 		return isRunning;
 	}
 
-	@Override
+	
 	public int getPort() {
 		return port;
 	}
