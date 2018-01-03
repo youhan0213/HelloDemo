@@ -20,12 +20,12 @@ public class QuartzJobFactory implements Job{
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("任务运行开始-------- start --------");   
 	        try {  
-//	            //ScheduleJob任务运行时具体参数，可自定义  
+	            //ScheduleJob任务运行时具体参数，可自定义  
 //	            ScheduleJob scheduleJob =(ScheduleJob) context.getMergedJobDataMap().get(  
 //	                    "scheduleJob"); 
 //	            System.out.println(scheduleJob);
-	        	logger.info("---------------------开始扫描数据--------------------");
-	        	logger.info("----------------------清理完毕----------------------");
+//	        	logger.info("---------------------开始扫描数据--------------------");
+//	        	logger.info("----------------------清理完毕----------------------");
 	        }catch (Exception e) {  
 	        	logger.info("捕获异常==="+e);  
 	        }  

@@ -2,34 +2,26 @@ package com.springmvc.task;
 
 public class ScheduleJob {
 
-	/*
-	 * job.setJobId(msgId);  
-        job.setJobName(jobName);  
-        job.setCreTime(nowTime);  
-        job.setJobCron(cron);  
-        job.setJobTime(sendTime);  
-        job.setJobGroup("MY_JOBGROUP_NAME");  
-        job.setJobDesc(desc);  
-	 */
 	private long jobId;
 	private String jobName;
 	private String jobCron;
 	private String jobGroup;
 	private String jobDesc;
-	private long jobTime;
-	private long creTime;
+	private String curTime;
+	private String status;
 	
-	public long getCreTime() {
-		return creTime;
+	public String getStatus() {
+		return status;
 	}
-	public void setCreTime(long creTime) {
-		this.creTime = creTime;
+	public void setStatus(String status) {
+		this.status = status;
 	}
-	public long getJobTime() {
-		return jobTime;
+	
+	public String getCurTime() {
+		return curTime;
 	}
-	public void setJobTime(long jobTime) {
-		this.jobTime = jobTime;
+	public void setCurTime(String curTime) {
+		this.curTime = curTime;
 	}
 	public long getJobId() {
 		return jobId;
@@ -65,20 +57,20 @@ public class ScheduleJob {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	public ScheduleJob(long jobId, String jobName, String jobCron, String jobGroup, String jobDesc, long jobTime,
-			long creTime) {
+	public ScheduleJob(long jobId, String jobName, String jobCron, String jobGroup, String jobDesc, String curTime,
+			String status) {
 		super();
 		this.jobId = jobId;
 		this.jobName = jobName;
 		this.jobCron = jobCron;
 		this.jobGroup = jobGroup;
 		this.jobDesc = jobDesc;
-		this.jobTime = jobTime;
-		this.creTime = creTime;
+		this.curTime = curTime;
+		this.status = status;
 	}
 	@Override
 	public String toString() {
 		return "ScheduleJob [jobId=" + jobId + ", jobName=" + jobName + ", jobCron=" + jobCron + ", jobGroup="
-				+ jobGroup + ", jobDesc=" + jobDesc + ", jobTime=" + jobTime + ", creTime=" + creTime + "]";
+				+ jobGroup + ", jobDesc=" + jobDesc + ", curTime=" + curTime + ", status=" + status + "]";
 	}
 }	

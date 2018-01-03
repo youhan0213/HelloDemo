@@ -24,7 +24,7 @@ import com.springmvc.result.MessageResult;
 @RequestMapping("/task")
 public class TaskController {
 	
-	@Autowired
+/*	@Autowired
 	private SchedulerFactoryBean schedulerFactoryBean;
 	@Autowired
 	private DataWorkContext dataWorkContext;
@@ -73,5 +73,5 @@ public class TaskController {
 		    }
 		}
 		return new MessageResult(ServiceError.SUCCESS);
-	}
+	}*/
 }
