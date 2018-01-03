@@ -28,8 +28,11 @@ import javax.annotation.Resource;
 
 public class QuartzManager {
 	
+	/**
+	 * 默认group name
+	 */
 	    private static String JOB_GROUP_NAME = "MY_JOBGROUP_NAME";    
-	    private static String TRIGGER_GROUP_NAME = "MY_TRIGGERGROUP_NAME";    
+//	    private static String TRIGGER_GROUP_NAME = "MY_TRIGGERGROUP_NAME";    
 	    
 	    /** 
 	     * @param schedule 
@@ -94,7 +97,6 @@ public class QuartzManager {
 	     */  
 	    public static void modifyJobTime(Scheduler schedule,String jobName, String time) {   
 	        TriggerKey triggerKey = TriggerKey.triggerKey(jobName, JOB_GROUP_NAME);  
-	          
 	        try {    
 	            CronTrigger trigger =(CronTrigger) schedule.getTrigger(triggerKey);  
 	            if (trigger == null) {    
