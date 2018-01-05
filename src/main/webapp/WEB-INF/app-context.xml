@@ -209,5 +209,8 @@
         </list>
     </property>
 </bean> -->
- <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" />
+<bean id="jobFactory" class="com.springmvc.task.JobFactory"></bean>
+ <bean id="schedulerFactoryBean" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" >
+ <property name="jobFactory" ref="jobFactory"></property>
+ </bean>
 </beans>

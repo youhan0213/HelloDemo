@@ -32,8 +32,6 @@ public class QuartzManager {
 	 * 默认group name
 	 */
 	    private static String JOB_GROUP_NAME = "MY_JOBGROUP_NAME";    
-//	    private static String TRIGGER_GROUP_NAME = "MY_TRIGGERGROUP_NAME";    
-	    
 	    /** 
 	     * @param schedule 
 	     * @Description: 添加一个定时任务，使用默认
@@ -66,10 +64,7 @@ public class QuartzManager {
 	     * @Description: 添加一个定时任务  
 	     * @param jobName 任务名 
 	     * @param jobGroupName 任务组名 
-	     * @param triggerName 触发器名  
-	     * @param triggerGroupName 触发器组名 
 	     * @param jobClass 任务 
-	     * @param time 时间设置，参考quartz说明文档 
 	     */  
 	    public static void addJob(Scheduler schedule, String jobName, String jobGroupName,    
 	            String triggerName, String triggerGroupName, Class jobClass,    
@@ -117,9 +112,6 @@ public class QuartzManager {
 	    
 	    /** 
 	     * @Description: 修改一个任务的触发时间  
-	     * @param triggerName 
-	     * @param triggerGroupName 
-	     * @param time 
 	     */  
 	    public static void modifyJobTime(Scheduler schedule,String triggerName,    
 	            String triggerGroupName, String time) {   
@@ -145,7 +137,7 @@ public class QuartzManager {
 	    
 	    /** 
 	     * @param schedule 
-	     * @Description 移除一个任务(使用默认的任务组名，触发器名，触发器组名) 
+	     * @Description 移除一个任务(使用默认的任务组名) 
 	     * @param jobName 
 	     */  
 	    public static void removeJob(Scheduler schedule, String jobName) {   
@@ -168,8 +160,6 @@ public class QuartzManager {
 	     * @Description: 移除一个任务  
 	     * @param jobName  
 	     * @param jobGroupName  
-	     * @param triggerName  
-	     * @param triggerGroupName  
 	     */    
 	    public static void removeJob(Scheduler schedule, String jobName, String jobGroupName,    
 	            String triggerName, String triggerGroupName) {   

@@ -26,6 +26,7 @@ public class QuartzJobFactory implements Job{
 //	            System.out.println(scheduleJob);
 //	        	logger.info("---------------------开始扫描数据--------------------");
 //	        	logger.info("----------------------清理完毕----------------------");
+
 	        }catch (Exception e) {  
 	        	logger.info("捕获异常==="+e);  
 	        }  
