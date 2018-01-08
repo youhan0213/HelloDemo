@@ -3,7 +3,6 @@ package com.springmvc.util;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.junit.Test;
 
 public class CronUtil {
 
@@ -33,7 +32,6 @@ public class CronUtil {
         return formatDateByPattern(date, dateFormat);  
     }  
 
-    @Test  
     public void test_getCron(){  
         String cron=CronUtil.getCron(new Date());  
         System.out.println(new Date());
