@@ -23,8 +23,8 @@ public class ScheduleJobInit {
 	/**
 	 * 每隔七天执行一次，每次执行时间为GMT 2:00
 	 */
-//	private static final String InitCron = "0 0 2 1/7 * ? ";
-	private static final String InitCron = "0/10 * * * * ?";
+	private static final String InitCron = "0 0 2 1/7 * ? ";
+//	private static final String InitCron = "0/10 * * * * ?";
 	
 	/**
 	 * 项目启动时初始化

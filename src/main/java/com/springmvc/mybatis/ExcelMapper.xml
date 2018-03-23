@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.springmvc.mybatis.ExcelMapper">
+<resultMap type="com.rpc.test.bean.AppStarBean" id="AppStarBean">
+<result column="product_id" property="productId"/>
+<result column="app_id" property="appId"/>
+<result column="stars" property="stars"/>
+<result column="type" property="type"/>
+<result column="create_time" property="createTiem"/>
+</resultMap>
+<insert id="batchSave" >
+insert into z_app_stars (product_id,app_id,stars,type,create_time) values 
+<foreach collection="list" item="b" separator=",">
+(#{b.productId},#{b.appId},#{b.stars},#{b.type},#{b.createTime})
+</foreach>
+</insert>
+</mapper>

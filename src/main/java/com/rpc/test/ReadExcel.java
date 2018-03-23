@@ -1,154 +1,245 @@
 package com.rpc.test;
 
-import java.io.BufferedWriter;  
-import java.io.File;  
-import java.io.FileInputStream;  
-import java.io.FileWriter;  
-import java.io.IOException;  
-import java.io.InputStream;  
-import java.text.SimpleDateFormat;  
-  
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;  
-import org.apache.poi.ss.usermodel.Cell;  
-import org.apache.poi.ss.usermodel.DateUtil;  
-import org.apache.poi.ss.usermodel.Row;  
-import org.apache.poi.ss.usermodel.Sheet;  
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.text.Format;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import org.apache.poi.EncryptedDocumentException;
+import org.apache.poi.hssf.extractor.ExcelExtractor;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.openxml4j.exceptions.InvalidFormatException;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellType;
+import org.apache.poi.ss.usermodel.CellValue;
+import org.apache.poi.ss.usermodel.DataFormatter;
+import org.apache.poi.ss.usermodel.DateUtil;
+import org.apache.poi.ss.usermodel.FormulaEvaluator;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;  
-  
-public class ReadExcel {  
-  
-    private static final String EXCEL_XLS = "xls";  
-    private static final String EXCEL_XLSX = "xlsx";  
-  
-    /** 
-     * 判断Excel的版本,获取Workbook 
-     * @param in 
-     * @param filename 
-     * @return 
-     * @throws IOException 
-     */  
-    public static Workbook getWorkbok(InputStream in,File file) throws IOException{  
-        Workbook wb = null;  
-        if(file.getName().endsWith(EXCEL_XLS)){  //Excel 2003  
-            wb = new HSSFWorkbook(in);  
-        }else if(file.getName().endsWith(EXCEL_XLSX)){  // Excel 2007/2010  
-            wb = new XSSFWorkbook(in);  
-        }  
-        return wb;  
-    }  
-  
-    /** 
-     * 判断文件是否是excel 
-     * @throws Exception  
-     */  
-    public static void checkExcelVaild(File file) throws Exception{  
-        if(!file.exists()){  
-            throw new Exception("文件不存在");  
-        }  
-        if(!(file.isFile() && (file.getName().endsWith(EXCEL_XLS) || file.getName().endsWith(EXCEL_XLSX)))){  
-            throw new Exception("文件不是Excel");  
-        }  
-    }  
-  
-    /** 
-     * 读取Excel测试，兼容 Excel 2003/2007/2010 
-     * @throws Exception  
-     */  
-    public static void main(String[] args) throws Exception {  
-        SimpleDateFormat fmt = new SimpleDateFormat("yyyy-MM-dd");  
-        BufferedWriter bw = new BufferedWriter(new FileWriter(new File("D:\\aaa.txt")));  
-        try {  
-            // 同时支持Excel 2003、2007  
-            File excelFile = new File("D:\\readExcel.xls"); // 创建文件对象  
-            FileInputStream is = new FileInputStream(excelFile); // 文件流  
-            checkExcelVaild(excelFile);  
-//            Workbook workbook = getWorkbok(is,excelFile);  
-            Workbook workbook = WorkbookFactory.create(is); // 这种方式 Excel2003/2007/2010都是可以处理的  
-  
-            int sheetCount = workbook.getNumberOfSheets(); // Sheet的数量  
-            /** 
-             * 设置当前excel中sheet的下标：0开始 
-             */  
-            Sheet sheet = workbook.getSheetAt(0);   // 遍历第一个Sheet  
-  
-            // 为跳过第一行目录设置count  
-            int count = 0;  
-  
-            for (Row row : sheet) {  
-                // 跳过第一行的目录  
-                if(count == 0){  
-                    count++;  
-                    continue;  
-                }  
-                // 如果当前行没有数据，跳出循环  
-                if(row.getCell(0).toString().equals("")){  
-                    return ;  
-                }  
-                String rowValue = "";  
-                for (Cell cell : row) {  
-                    if(cell.toString() == null){  
-                        continue;  
-                    }  
-                    int cellType = cell.getCellType();  
-                    String cellValue = "";  
-                    switch (cellType) {  
-                        case Cell.CELL_TYPE_STRING:     // 文本  
-                            cellValue = cell.getRichStringCellValue().getString() + "-";  
-                            break;  
-                        case Cell.CELL_TYPE_NUMERIC:    // 数字、日期  
-                            if (DateUtil.isCellDateFormatted(cell)) {  
-                                cellValue = fmt.format(cell.getDateCellValue()) + "#";  
-                            } else {  
-                                cell.setCellType(Cell.CELL_TYPE_STRING);  
-                                cellValue = String.valueOf(cell.getRichStringCellValue().getString()) ;  
-                            }  
-                            break;  
-                        case Cell.CELL_TYPE_BOOLEAN:    // 布尔型  
-                            cellValue = String.valueOf(cell.getBooleanCellValue()) + "#";  
-                            break;  
-                        case Cell.CELL_TYPE_BLANK: // 空白  
-                            cellValue = cell.getStringCellValue() + "#";  
-                            break;  
-                        case Cell.CELL_TYPE_ERROR: // 错误  
-                            cellValue = "错误#";  
-                            break;  
-                        case Cell.CELL_TYPE_FORMULA:    // 公式  
-                            // 得到对应单元格的公式  
-                            //cellValue = cell.getCellFormula() + "#";  
-                            // 得到对应单元格的字符串  
-                            cell.setCellType(Cell.CELL_TYPE_STRING);  
-                            cellValue = String.valueOf(cell.getRichStringCellValue().getString()) + "#";  
-                            break;  
-                        default:  
-                            cellValue = "#";  
-                    }  
-                    //System.out.print(cellValue);  
-                    rowValue += cellValue + "-";  
-                }  
-//                writeSql(rowValue,bw);  
-                System.out.println(rowValue);  
-                System.out.println();  
-            }  
-            bw.flush();  
-        } catch (Exception e) {  
-            e.printStackTrace();  
-        } finally{  
-            bw.close();  
-        }  
+import org.apache.poi.xssf.extractor.XSSFExcelExtractor;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import com.rpc.test.bean.AppStarBean;
+
+public class ReadExcel {
+
+    private static final String EXCEL_PATH = "D:\\readExcel.xls";
+
+    /**
+     * 直接抽取excel中的数据
+     */
+    public static void extract(String path) {
+        InputStream inp = null;
+        Workbook workbook = null;
+        ExcelExtractor extractor = null;
+        XSSFExcelExtractor xssfExtractor = null;
+        String text = "";
+        try {
+            inp = new FileInputStream(path);
+            workbook = WorkbookFactory.create(inp);
+            if (workbook instanceof HSSFWorkbook) {
+                extractor = new ExcelExtractor((HSSFWorkbook) workbook);
+                extractor.setFormulasNotResults(true);
+                extractor.setIncludeSheetNames(false);
+                text = extractor.getText();
+            } else if (workbook instanceof XSSFWorkbook) {
+                xssfExtractor = new XSSFExcelExtractor((XSSFWorkbook) workbook);
+                xssfExtractor.setFormulasNotResults(true);
+                xssfExtractor.setIncludeSheetNames(false);
+                text = xssfExtractor.getText();
+            } else {
+                return;
+            }
+            System.out.println(text);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (EncryptedDocumentException e) {
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (extractor != null) {
+                try {
+                    extractor.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (xssfExtractor != null) {
+                try {
+                    xssfExtractor.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inp != null) {
+                try {
+                    inp.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
- // 将值拼成sql语句  
-    public static void writeSql(String rowValue,BufferedWriter bw) throws IOException{  
-        String[] sqlValue = rowValue.split("#");  
-        String sql = "";  
-        sql="INSERT INTO table_name (列名1) VALUES("+ sqlValue[0].trim() + ");"+"\n";  
-        System.out.print(sql);  
-        try {  
-            bw.write(sql);  
-            bw.newLine();  
-        } catch (IOException e) {  
-            e.printStackTrace();  
-        }  
-    }  
- }  
+
+    /**
+     * 原样返回数值单元格的内容
+     */
+    public static String formatNumericCell(Double value, Cell cell) {
+        if(cell.getCellTypeEnum() != CellType.NUMERIC && cell.getCellTypeEnum() != CellType.FORMULA) {
+            return null;
+        }
+        //isCellDateFormatted判断该单元格是"时间格式"或者该"单元格的公式算出来的是时间格式"
+        if(DateUtil.isCellDateFormatted(cell)) {
+            //cell.getDateCellValue()碰到单元格是公式,会自动计算出Date结果
+            Date date = cell.getDateCellValue();
+            DataFormatter dataFormatter = new DataFormatter();
+            Format format = dataFormatter.createFormat(cell);
+            return format.format(date);
+        } else {
+            DataFormatter dataFormatter = new DataFormatter();
+            Format format = dataFormatter.createFormat(cell);
+            return format.format(value);
+
+        }
+    }
+
+    /*
+     * 通过对单元格遍历的形式来获取信息 ，这里要判断单元格的类型才可以取出值
+     */
+    public static List<AppStarBean> readWorkbook(File file) {
+    	List<AppStarBean> list = new ArrayList<AppStarBean>();
+        InputStream inp = null;
+        Workbook workbook = null;
+        try {
+//            inp = new FileInputStream(path);
+        	inp = new FileInputStream(file);
+            workbook = WorkbookFactory.create(inp);
+            FormulaEvaluator evaluator = workbook.getCreationHelper().createFormulaEvaluator();
+            // for/in是iterator的简写, 最终会被编译器编译为iterator
+            // for(Iterator<Sheet> iterator=workbook.iterator(); iterator.hasNext();) {
+            // Sheet sheet = iterator.next();
+            int count = 0;
+            boolean b = true;
+            for (Sheet sheet : workbook) {
+                System.out.println("----------" + sheet.getSheetName() + "----------");
+                for (Row row : sheet) {
+                	if(count == 0) {
+                		count++;
+                		continue;
+                	}
+                	AppStarBean asb = new AppStarBean();
+                    for (Cell cell : row) {
+                        switch (cell.getCellTypeEnum()) {
+                        case _NONE:
+                            System.out.print("_NONE" + "\t");
+                            break;
+                        case BLANK:
+                            System.out.print("BLANK" + "\t");
+                            break;
+                        case BOOLEAN:
+                            System.out.print(cell.getBooleanCellValue() + "\t");
+                            break;
+                        case ERROR:
+                            System.out.print("ERROR(" + cell.getErrorCellValue() + ")" + "\t");
+                            break;
+                        case FORMULA:
+                            // 会打印出原本单元格的公式
+                            // System.out.print(cell.getCellFormula() + "\t");
+                            // NumberFormat nf = new DecimalFormat("#.#");
+                            // String value = nf.format(cell.getNumericCellValue());
+                            CellValue cellValue = evaluator.evaluate(cell);
+                            switch (cellValue.getCellTypeEnum()) {
+                            case _NONE:
+                                System.out.print("_NONE" + "\t");
+                                break;
+                            case BLANK:
+                                System.out.print("BLANK" + "\t");
+                                break;
+                            case BOOLEAN:
+                                System.out.print(cellValue.getBooleanValue() + "\t");
+                                break;
+                            case ERROR:
+                                System.out.print("ERROR(" + cellValue.getErrorValue() + ")" + "\t");
+                                break;
+                            case NUMERIC:
+                                System.out.print(formatNumericCell(cellValue.getNumberValue(), cell) + "\t");
+                                break;
+                            case STRING:
+                                System.out.print(cell.getStringCellValue() + "\t");
+                                // System.out.print(cell.getRichStringCellValue() + "\t");
+                                break;
+                            default:
+                                break;
+                            }
+                            break;
+                        case NUMERIC:
+                            System.out.print(formatNumericCell(cell.getNumericCellValue(), cell) + "\t");
+                            if(b) {
+                            	asb.setAppId(Integer.parseInt(formatNumericCell(cell.getNumericCellValue(), cell)));
+                            	b = false;
+                            }else {
+                            	asb.setStars(Integer.parseInt(formatNumericCell(cell.getNumericCellValue(), cell)));
+                            	b = true;
+                            }
+                            break;
+                        case STRING:
+                            System.out.print(cell.getStringCellValue() + "\t");
+                            // System.out.print(cell.getRichStringCellValue() + "\t");
+                            break;
+                        }
+                    }
+                    list.add(asb);
+                    System.out.println();
+                }
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (EncryptedDocumentException e) {
+            e.printStackTrace();
+        } catch (InvalidFormatException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (workbook != null) {
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            if (inp != null) {
+                try {
+                    inp.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+		return list;
+    }
+
+    public static void main(String[] args) {
+//        extract(EXCEL_PATH);
+//        readWorkbook(EXCEL_PATH);
+    }
+
+}
