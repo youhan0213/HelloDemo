@@ -44,15 +44,15 @@ public class MD5 {
         }  
     }  
   
-    public static void main(String[] args) throws IOException {  
-        long begin = System.currentTimeMillis();  
-  
-        File big = new File("F:\\tmp\\aaa.txt");//文件绝对路径  
-        String md5 = getFileMD5String(big);  
-        //String md5 = getMD5String("a");  
-        long end = System.currentTimeMillis();  
-        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");  
-    }  
+//    public static void main(String[] args) throws IOException {  
+//        long begin = System.currentTimeMillis();  
+//  
+//        File big = new File("F:\\tmp\\aaa.txt");//文件绝对路径  
+//        String md5 = getFileMD5String(big);  
+//        //String md5 = getMD5String("a");  
+//        long end = System.currentTimeMillis();  
+//        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");  
+//    }  
     /** 
      * 计算文件的MD5 
      * @param file 文件对象 
@@ -153,13 +153,13 @@ public class MD5 {
 		InputStream in = new BufferedInputStream(new FileInputStream(file));
 		return DigestUtils.md5Hex(in).toLowerCase();
 	}
-//    public static void main(String[] args) throws IOException {  
-//        long begin = System.currentTimeMillis();  
-//  
-//        File big = new File("F:\\tmp\\aaa.txt");//文件绝对路径  
-//        String md5 = md5file(big);  
-//        //String md5 = getMD5String("a");  
-//        long end = System.currentTimeMillis();  
-//        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");  
-//    }  
+    public static void main(String[] args) throws IOException {  
+        long begin = System.currentTimeMillis();  
+  
+        File big = new File("F:\\tmp\\aaa.txt");//文件绝对路径  
+        String md5 = md5file(big);  
+        //String md5 = getMD5String("a");  
+        long end = System.currentTimeMillis();  
+        System.out.println("md5:" + md5 + " time:" + ((end - begin) / 1000) + "s");  
+    }  
 }  
