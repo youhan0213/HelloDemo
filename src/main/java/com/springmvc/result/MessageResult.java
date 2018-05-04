@@ -23,5 +23,6 @@ public class MessageResult extends APIResult {
 	}
 	public MessageResult(ServiceError error) {
 		this.error = error.getCode();
+//		this.message = MessageTranslator.translate(error.getCode()+"", "");
 	}
 }

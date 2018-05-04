@@ -6,7 +6,7 @@
 <result column="app_id" property="appId"/>
 <result column="stars" property="stars"/>
 <result column="type" property="type"/>
-<result column="create_time" property="createTiem"/>
+<result column="create_time" property="createTime"/>
 </resultMap>
 <insert id="batchSave" >
 insert into z_app_stars (product_id,app_id,stars,type,create_time) values 
@@ -14,4 +14,7 @@ insert into z_app_stars (product_id,app_id,stars,type,create_time) values
 (#{b.productId},#{b.appId},#{b.stars},#{b.type},#{b.createTime})
 </foreach>
 </insert>
+<delete id="batchDelete">
+delete from z_app_stars where product_id = #{productId}
+</delete>
 </mapper>

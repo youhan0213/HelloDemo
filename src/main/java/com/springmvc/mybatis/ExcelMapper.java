@@ -10,4 +10,6 @@ public interface ExcelMapper {
 
 	int batchSave(@Param("list")List<AppStarBean> list);
 
+	int batchDelete(@Param("productId")Integer productId);
+
 }

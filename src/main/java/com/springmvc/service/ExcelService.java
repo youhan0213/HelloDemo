@@ -8,4 +8,6 @@ public interface ExcelService {
 
 	int batchSave(List<AppStarBean> list);
 
+	int batchDelete(Integer productId);
+
 }

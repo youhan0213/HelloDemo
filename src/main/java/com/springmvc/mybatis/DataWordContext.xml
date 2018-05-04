@@ -6,9 +6,9 @@
 		<result column="job_id" property="jobId"/>
 		<result column="job_name" property="jobName"/>
 		<result column="job_group" property="jobGroup"/>
-		<result column="job_status" property="jobStatus"/>
-		<result column="cron_expression" property="cronExpression"/>
-		<result column="desc" property="desc"/>
+		<result column="job_status" property="status"/>
+		<result column="cron_expression" property="jobCron"/>
+		<result column="desc" property="jobDesc"/>
 	</resultMap>
 <select id="getAllJob" resultMap="schedultJob">
     select * from schedule_job

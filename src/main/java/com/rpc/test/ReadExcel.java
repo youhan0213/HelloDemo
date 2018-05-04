@@ -8,7 +8,9 @@ import java.io.InputStream;
 import java.text.Format;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.poi.EncryptedDocumentException;
 import org.apache.poi.hssf.extractor.ExcelExtractor;
@@ -124,7 +126,12 @@ public class ReadExcel {
     /*
      * 通过对单元格遍历的形式来获取信息 ，这里要判断单元格的类型才可以取出值
      */
-    public static List<AppStarBean> readWorkbook(File file) {
+    /**
+     * @param file
+     * @return
+     */
+    public static Map<String,Object> readWorkbook(File file) {
+    	Map<String,Object> map = new HashMap<>();
     	List<AppStarBean> list = new ArrayList<AppStarBean>();
         InputStream inp = null;
         Workbook workbook = null;
@@ -143,6 +150,17 @@ public class ReadExcel {
                 for (Row row : sheet) {
                 	if(count == 0) {
                 		count++;
+                		Cell cell = row.getCell(0);
+                		String value = cell.getStringCellValue();
+                		System.out.println("第一列表头 :" + value);
+                		Cell c = row.getCell(1);
+                		String v = c.getStringCellValue();
+                		System.out.println("第二列表头： " + v);
+                		if(!value.equalsIgnoreCase("appid") || ! v.equalsIgnoreCase("stars")) {
+                			map.put("error", 1);
+                			map.put("message", "excel 格式不符！");
+                			return map;
+                		}
                 		continue;
                 	}
                 	AppStarBean asb = new AppStarBean();
@@ -234,7 +252,9 @@ public class ReadExcel {
                 }
             }
         }
-		return list;
+        map.put("error", 0);
+        map.put("data", list);
+		return map;
     }
 
     public static void main(String[] args) {

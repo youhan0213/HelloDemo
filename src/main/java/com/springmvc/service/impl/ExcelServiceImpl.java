@@ -20,5 +20,10 @@ public class ExcelServiceImpl implements ExcelService {
 		// TODO Auto-generated method stub
 		return excelMapper.batchSave(list);
 	}
+	@Override
+	public int batchDelete(Integer productId) {
+		// TODO Auto-generated method stub
+		return excelMapper.batchDelete(productId);
+	}
 
 }
