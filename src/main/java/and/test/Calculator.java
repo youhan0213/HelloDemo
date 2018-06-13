@@ -11,5 +11,6 @@ public class Calculator extends Thread {
             } 
             //通知所有在此对象上等待的线程
             notifyAll(); 
+            
     } 
 }
